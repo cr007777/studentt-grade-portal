@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Teacher Dashboard</title>
+  <link rel="stylesheet" href="teacher.css" />
+   <link rel="icon" type="image" href="favicon.ico.png">
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+
+      <!-- Top right logout -->
+      <div class="top-bar">
+        <button id="logoutBtn" class="logout-btn">Logout</button>
+      </div>
+
+      <h1 id="dashboard">Teacher Dashboard</h1>
+      <p class="subtitle">Manage marks and feedback for your students</p>
+
+      <!-- Subject selection -->
+      <div class="section">
+        <div class="input-group">
+          <label for="subject">Select Subject</label>
+          <select id="subject">
+            <option>Choose a subject...</option>
+            <option>GE3791 Human Values and Ethics</option>
+            <option>GE3751 Principles of Management</option>
+            <option>AI3021 IT in Agricultural System</option>
+            <option>OHS352 Project Report Writing</option>
+            <option>CS3711 Summer Intership</option>
+          </select>
+        </div>
+      </div>
+<!-- Department selection -->
+<div class="section">
+  <div class="input-group">
+    <label for="department">Select Department</label>
+    <select id="department">
+      <option value="">Choose a department...</option>
+      <option value="CSE">Computer Science and Engineering</option>
+      <option value="ECE">Electronics and Communication Engineering</option>
+      <option value="EEE">Electrical and Electronics Engineering</option>
+      <option value="MECH">Mechanical Engineering</option>
+    </select>
+  </div>
+</div>
+
+      <!-- Student list -->
+      <div class="section student-list" id="studentList">
+        <h2>📋 Student Marks Entry</h2>
+
+        <div class="student-row">
+          <input type="text" placeholder="Student Name" value="">
+          <input type="text" placeholder="Student ID" value="">
+          <input type="number" placeholder="0-60" class="mark" min="0" max="60">
+          <input type="text" placeholder="Auto-calculated" class="grade" readonly>
+          <textarea placeholder="Provide feedback for this student..."></textarea>
+        </div>
+
+        <div class="student-row">
+          <input type="text" placeholder="Student Name" value="">
+          <input type="text" placeholder="Student ID" value="">
+          <input type="number" placeholder="0-60" class="mark" min="0" max="60">
+          <input type="text" placeholder="Auto-calculated" class="grade" readonly>
+          <textarea placeholder="Provide feedback for this student..."></textarea>
+        </div>
+
+        <div class="student-row">
+          <input type="text" placeholder="Student Name" value="">
+          <input type="text" placeholder="Student ID" value="">
+          <input type="number" placeholder="0-60" class="mark" min="0" max="60">
+          <input type="text" placeholder="Auto-calculated" class="grade" readonly>
+          <textarea placeholder="Provide feedback for this student..."></textarea>
+        </div>
+
+        <button id="addStudent">+ Add Another Student</button>
+      </div>
+
+      <!-- Actions -->
+      <div class="actions">
+        <button onclick="saveAllMarks()">💾 Save All</button>
+        <button class="btn blue" onclick="previewReport()">👁 Preview</button>
+        <button class="btn purple" onclick="exportExcel()">📘 Export</button>
+        <button class="btn red" onclick="clearAll()">🗑 Clear</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script type="module" src="teacher.js"></script>
+</body>
+</html>

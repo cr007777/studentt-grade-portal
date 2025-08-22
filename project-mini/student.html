@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Grade Portal</title>
+  <link rel="stylesheet" href="student.css">
+  <link rel="icon" type="image/png" href="favicon.ico.png">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+
+  <div class="container">
+    <div class="card">
+      <h1>🎓 Student Grade Portal</h1>
+      <p class="subtitle">View your academic performance and grade summary</p>
+
+      <!-- Student Info -->
+      <div class="student-info">
+        <div class="input-group">
+          <label>Student Name</label>
+          <input type="text" id="studentName" placeholder="Student Name" required>
+        </div>
+        <div class="input-group">
+          <label>Roll Number</label>
+          <input type="text" id="rollNo" placeholder="Roll No" required>
+        </div>
+        <div class="input-group">
+          <label>Department</label>
+          <select id="department">
+            <option value="">Choose a Department...</option>
+            <option value="CSE">CSE</option>
+            <option value="IT">IT</option>
+            <option value="ECE">ECE</option>
+            <option value="EEE">EEE</option>
+            <option value="ME">ME</option>
+          </select>
+        </div>
+      </div>
+      
+      <button id="submitBtn" class="btn" disabled>Submit</button>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+
+    <!-- Grade Report -->
+    <div class="card" id="gradeReport" style="display:none;">
+      <h2>📑 Exam Result</h2>
+      <p><strong>Name:</strong> <span id="displayName"></span></p>
+      <p><strong>Roll No:</strong> <span id="displayRoll"></span></p>
+      <p><strong>Department:</strong> <span id="displayDept"></span></p>
+
+      <table id="gradesTable">
+        <thead>
+          <tr>
+            <th>Subject</th>
+            <th>Marks</th>
+            <th>Grade</th>
+            <th>Feedback</th>
+          </tr>
+        </thead>
+        <tbody id="gradesBody"></tbody>
+      </table>
+
+      <div class="export-buttons">
+        <button onclick="window.print()">🖨️ Print Report</button>
+        <button onclick="exportPDF()">📄 Export PDF</button>
+        <button onclick="exportCSV()">📊 Export CSV</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="student.js"></script>
+</body>
+</html>
