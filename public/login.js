@@ -50,11 +50,23 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
     const uid = userCredential.user.uid;
 
     // Role check using your provided UIDs
-    if ((role === 'teacher' && uid !== 'bmlbgnsxNlRIayU1gCbV4GE0c6o2') ||
-        (role === 'student' && uid !== 'wnkP4CQ3Whe3cOsiCKYOQ5BrvWD2')) {
-      showToast("⚠️ Role mismatch or unauthorized user", "error");
-      return;
-    }
+    const validTeacherUIDs = ['6Jk2TkaGG9ZSTCpS4dI4N2QKAPC2'];
+const validStudentUIDs = [ 
+                        'pbBK7Po1mRTsk1qJwyCIUc50PQD2',  
+                        '5dfFpRNpWreQmSymigSb1q7L6Tt2', 
+                        '53lt1FZAyEcTkKBXE9JGhpLwqfZ2', 
+                        'UUjIJfqKlwVb6bHB2Vm2Dw5qCHo2',
+                        'WXnllhH4iabAN7brAMhHDHuusMd2',
+                        '4j9m6A4B5jUff1ErmmHuNvyo8oZ2',
+                        'sHoDsnzL4ES0Td1522RR2q3Kptl2',
+                        ];
+
+if ((role === 'teacher' && !validTeacherUIDs.includes(uid)) ||
+    (role === 'student' && !validStudentUIDs.includes(uid))) {
+  showToast("⚠️ Role mismatch or unauthorized user", "error");
+  return;
+}
+
 
     showToast("✅ Login Successful!", "success");
     setTimeout(() => {

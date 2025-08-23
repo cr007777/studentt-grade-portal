@@ -11,20 +11,35 @@ const subjects = {
   ME: ["Thermodynamics", "Mechanics", "Manufacturing", "Fluid Dynamics", "Design"]
 };
 
+// ✅ Department name to code mapping
+function getDeptCode(deptName) {
+  const map = {
+    "Computer Science and Engineering": "CSE",
+    "Information Technology": "IT",
+    "Electronics and Communication Engineering": "ECE",
+    "Electrical and Electronics Engineering": "EEE",
+    "Mechanical Engineering": "ME"
+  };
+  return map[deptName] || deptName;
+}
+
 function getStudentIDFromURL() {
   const params = new URLSearchParams(window.location.search);
   return params.get("studentID");
 }
 
 function downloadReport(studentID, studentData) {
-  if (!studentData || !studentData.name || !studentData.rollNo || !studentData.department) {
-    alert("⚠️ Student profile is incomplete. Please verify your details.");
+  if (!studentData?.name || !studentData?.rollNo || !studentData?.department) {
+    alert("⚠️ Student profile is incomplete.");
     return;
   }
 
+  // Fill form fields
   document.getElementById("studentName").value = studentData.name;
   document.getElementById("rollNo").value = studentData.rollNo;
   document.getElementById("department").value = studentData.department;
+
+  // Display summary
   document.getElementById("displayName").innerText = studentData.name;
   document.getElementById("displayRoll").innerText = studentData.rollNo;
   document.getElementById("displayDept").innerText = studentData.department;
@@ -32,7 +47,6 @@ function downloadReport(studentID, studentData) {
   const gradesBody = document.getElementById("gradesBody");
   gradesBody.innerHTML = "";
 
-  const deptSubjects = subjects[studentData.department] || [];
   let found = false;
 
   get(ref(db, "marks")).then(snapshot => {
@@ -43,21 +57,20 @@ function downloadReport(studentID, studentData) {
 
     const allMarks = snapshot.val();
 
-    deptSubjects.forEach(subject => {
+    for (const subject in allMarks) {
       const subjectMarks = allMarks[subject];
-      if (subjectMarks && subjectMarks[studentID]) {
+      if (subjectMarks?.[studentID]) {
         const entry = subjectMarks[studentID];
-        const row = `
+        gradesBody.innerHTML += `
           <tr>
             <td>${subject}</td>
             <td>${entry.marks || "-"}</td>
             <td>${entry.grade || "-"}</td>
             <td>${entry.feedback || "No feedback"}</td>
           </tr>`;
-        gradesBody.innerHTML += row;
         found = true;
       }
-    });
+    }
 
     if (!found) {
       gradesBody.innerHTML = `<tr><td colspan="4">📭 No marks found for your subjects.</td></tr>`;
@@ -66,9 +79,10 @@ function downloadReport(studentID, studentData) {
     document.getElementById("gradeReport").style.display = "block";
   }).catch(error => {
     console.error("Error fetching marks:", error);
-    alert("⚠️ Unable to load marks. Please try again later.");
+    alert("⚠️ Unable to load marks.");
   });
 }
+
 
 // Auth listener
 onAuthStateChanged(auth, (user) => {
@@ -82,7 +96,7 @@ onAuthStateChanged(auth, (user) => {
         window.studentData = studentData;
         downloadReport(studentID, studentData);
       } else {
-        alert("⚠️ No student profile found for the provided ID.");
+        alert("⚠️ No student profile found.");
       }
     }).catch(error => {
       console.error("Error fetching student profile:", error);
@@ -105,20 +119,18 @@ onAuthStateChanged(auth, (user) => {
         }
       }
 
-      alert("⚠️ No matching student profile found for your account.");
+      // Removed unwanted alert here
+      // alert("⚠️ No matching student profile found.");
     }).catch(error => {
       console.error("Error fetching student profile:", error);
-      const gradesBody = document.getElementById("gradesBody");
-      if (gradesBody) {
-        gradesBody.innerHTML = `<tr><td colspan="4" style="font-weight:bold; color:#e11d48;">⚠️ No data available for your account.</td></tr>`;
-      }
+      document.getElementById("gradesBody").innerHTML = `<tr><td colspan="4" style="color:#e11d48;">⚠️ No data available.</td></tr>`;
     });
   } else {
     window.location.href = "index.html";
   }
 });
 
-// Submit logic
+// Form validation
 const nameInput = document.getElementById("studentName");
 const rollInput = document.getElementById("rollNo");
 const deptSelect = document.getElementById("department");
@@ -128,10 +140,10 @@ function checkFormFilled() {
   submitBtn.disabled = !(nameInput.value && rollInput.value && deptSelect.value);
 }
 
-nameInput.addEventListener("input", checkFormFilled);
-rollInput.addEventListener("input", checkFormFilled);
+[nameInput, rollInput].forEach(input => input.addEventListener("input", checkFormFilled));
 deptSelect.addEventListener("change", checkFormFilled);
 
+// Manual submit
 submitBtn.addEventListener("click", () => {
   const rollNo = rollInput.value.trim();
   get(ref(db, "students")).then(snapshot => {
@@ -157,7 +169,7 @@ submitBtn.addEventListener("click", () => {
   });
 });
 
-// Save Marks to Firebase
+// Save marks
 window.saveMarks = function () {
   const name = nameInput.value.trim();
   const rollNo = rollInput.value.trim();
@@ -186,7 +198,7 @@ window.saveMarks = function () {
   })
   .catch((error) => {
     console.error("Error saving marks:", error);
-    alert("⚠️ Failed to save marks. Please try again.");
+    alert("⚠️ Failed to save marks.");
   });
 };
 
@@ -220,16 +232,16 @@ window.exportCSV = function () {
   let csv = "Subject,Marks,Grade,Feedback\n";
   document.querySelectorAll("#gradesBody tr").forEach(row => {
     const cells = row.querySelectorAll("td");
-    const line = Array.from(cells).map(cell => `"${cell.innerText}"`).join(",");
-    csv += line + "\n";
+    if (cells.length > 0) {
+      const line = Array.from(cells).map(cell => `"${cell.innerText}"`).join(",");
+      csv += line + "\n";
+    }
   });
 
+  // Download CSV
   const blob = new Blob([csv], { type: "text/csv" });
   const link = document.createElement("a");
   link.href = URL.createObjectURL(blob);
   link.download = "GradeReport.csv";
   link.click();
 };
-
-
-window.downloadReport = downloadReport;

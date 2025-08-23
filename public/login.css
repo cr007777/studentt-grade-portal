@@ -185,3 +185,86 @@ body {
 .toast.success {
   background: #22c55e;
 }
+/* ...existing code... */
+
+/* Responsive styles for tablets and below */
+@media (max-width: 900px) {
+  .container {
+    flex-direction: column;
+    width: 100%;
+    max-width: 100%;
+    min-height: 100vh;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0;
+  }
+  .illustration, .login-card {
+    border-radius: 0;
+    min-width: 0;
+    max-width: 100vw;
+    padding: 32px 10px;
+  }
+}
+
+/* Responsive styles for mobile devices */
+@media (max-width: 600px) {
+  .container {
+    flex-direction: column;
+    width: 100vw;
+    min-height: 100vh;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0;
+  }
+  .illustration, .login-card {
+    padding: 18px 4vw;
+    min-width: 0;
+    max-width: 100vw;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .illustration h1 {
+    font-size: 1.3rem;
+  }
+  .illustration p {
+    font-size: 0.95rem;
+  }
+  .login-card h2 {
+    font-size: 1.1rem;
+  }
+  .input-group input {
+    font-size: 1rem;
+    padding: 12px 10px;
+  }
+  .input-group label {
+    font-size: 0.95rem;
+  }
+  .role-buttons {
+    flex-direction: column;
+    gap: 10px;
+    margin: 16px 0;
+  }
+  .role-pill {
+    width: 100%;
+    margin: 0 0 8px 0;
+    font-size: 1rem;
+    padding: 12px 0;
+  }
+  .login-btn {
+    font-size: 1rem;
+    padding: 12px;
+  }
+  .toast {
+    font-size: 0.95rem;
+    padding: 10px 10vw;
+    min-width: 0;
+    max-width: 98vw;
+  }
+}
+
+/* Ensure illustration and login-card stack and fill width on small screens */
+@media (max-width: 400px) {
+  .illustration, .login-card {
+    padding: 10px 2vw;
+  }
+}

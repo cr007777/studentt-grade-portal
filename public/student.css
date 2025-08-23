@@ -167,3 +167,89 @@ body {
     margin-left: 0;
   }
 }
+/* ...existing code... */
+
+/* Responsive styles for tablets and below */
+@media (max-width: 900px) {
+  .container {
+    flex-direction: column;
+    width: 100%;
+    max-width: 100%;
+    min-height: 100vh;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0;
+    align-items: center;
+  }
+  .card {
+    border-radius: 0;
+    min-width: 0;
+    max-width: 98vw;
+    padding: 32px 10px;
+    margin: 12px 0;
+  }
+  table {
+    font-size: 0.98rem;
+  }
+}
+
+/* Responsive styles for mobile devices */
+@media (max-width: 600px) {
+  .container {
+    flex-direction: column;
+    width: 100vw;
+    min-height: 100vh;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0;
+    align-items: stretch;
+  }
+  .card {
+    padding: 16px 2vw;
+    min-width: 0;
+    max-width: 100vw;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  h1, h2 {
+    font-size: 1.2rem;
+  }
+  .subtitle {
+    font-size: 1rem;
+  }
+  .input-group label,
+  .input-group input,
+  .input-group select {
+    font-size: 1rem;
+  }
+  table {
+    font-size: 0.95rem;
+    width: 100%;
+    display: block;
+    overflow-x: auto;
+  }
+  .export-buttons {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .export-buttons button {
+    width: 100%;
+    margin-bottom: 8px;
+  }
+  .logout-btn, .btn {
+    width: 100%;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    padding: 12px 0;
+  }
+}
+
+/* Extra small devices */
+@media (max-width: 400px) {
+  .card {
+    padding: 8px 1vw;
+  }
+  h1, h2 {
+    font-size: 1rem;
+  }
+}

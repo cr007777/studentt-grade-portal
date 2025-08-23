@@ -18,7 +18,7 @@
 
       <h1 id="dashboard">Teacher Dashboard</h1>
       <p class="subtitle">Manage marks and feedback for your students</p>
-      
+
       <!-- Subject selection -->
       <div class="section">
         <div class="input-group">
@@ -40,13 +40,13 @@
     <select id="department">
       <option value="">Choose a department...</option>
       <option value="CSE">Computer Science and Engineering</option>
+      <option value="IT">Information Technology</option>
       <option value="ECE">Electronics and Communication Engineering</option>
       <option value="EEE">Electrical and Electronics Engineering</option>
       <option value="MECH">Mechanical Engineering</option>
     </select>
   </div>
 </div>
-
       <!-- Student list -->
       <div class="section student-list" id="studentList">
         <h2>📋 Student Marks Entry</h2>
@@ -80,7 +80,7 @@
 
       <!-- Actions -->
       <div class="actions">
-        <button onclick="saveAllMarks()">💾 Save All</button>
+        <button id="saveBtn" class="btn green">💾 Save All</button>
         <button class="btn blue" onclick="previewReport()">👁 Preview</button>
         <button class="btn purple" onclick="exportExcel()">📘 Export</button>
         <button class="btn red" onclick="clearAll()">🗑 Clear</button>

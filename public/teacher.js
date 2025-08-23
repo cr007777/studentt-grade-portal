@@ -27,9 +27,9 @@ document.getElementById("addStudent").addEventListener("click", () => {
   let newRow = document.createElement("div");
   newRow.classList.add("student-row");
   newRow.innerHTML = `
-    <input type="text" placeholder="Student Name">
-    <input type="text" placeholder="Student ID">
-    <input type="number" placeholder="0-100" class="mark" min="0" max="100">
+    <input type="text" placeholder="Student Name" required>
+    <input type="text" placeholder="Student ID" required>
+    <input type="number" placeholder="0-100" class="mark" min="0" max="100" required>
     <input type="text" placeholder="Auto-calculated" class="grade" readonly>
     <textarea placeholder="Provide feedback for this student..."></textarea>
   `;
@@ -37,11 +37,10 @@ document.getElementById("addStudent").addEventListener("click", () => {
 });
 
 // Save All Marks
-function saveAllMarks() {
+async function saveAllMarks() {
   const subject = document.getElementById("subject")?.value;
   const department = document.getElementById("department")?.value;
 
-  // Validate subject and department
   if (!subject || subject.trim() === "" || subject === "Choose a subject...") {
     return alert("⚠️ Please select a valid subject!");
   }
@@ -51,13 +50,13 @@ function saveAllMarks() {
   }
 
   let validEntries = 0;
+  let lastStudentID = null;
 
-  document.querySelectorAll(".student-row").forEach(row => {
+  const rows = document.querySelectorAll(".student-row");
+
+  for (const row of rows) {
     const inputs = row.querySelectorAll("input, textarea");
-    if (inputs.length < 5) {
-      console.warn("Skipping incomplete row:", row);
-      return;
-    }
+    if (inputs.length < 5) continue;
 
     const studentName = inputs[0]?.value.trim();
     const studentID = inputs[1]?.value.trim();
@@ -65,33 +64,39 @@ function saveAllMarks() {
     const grade = inputs[3]?.value.trim();
     const feedback = inputs[4]?.value.trim();
 
-    if (!studentID || !studentName) return;
+    const numericMark = parseInt(mark);
+    if (!studentID || !studentName || isNaN(numericMark) || numericMark < 0 || numericMark > 100) {
+      console.warn(`Skipping invalid entry for ${studentID}`);
+      continue;
+    }
 
-    // Save marks under marks/subject/studentUID
-    set(ref(db, `marks/${subject}/${studentID}`), {
-      name: studentName,
-      roll: studentID,
-      dept: department,
-      marks: mark,
-      grade: grade,
-      feedback: feedback
-    });
+    lastStudentID = studentID;
 
+    try {
+      await set(ref(db, `marks/${subject}/${studentID}`), {
+        name: studentName,
+        roll: studentID,
+        dept: department,
+        marks: numericMark,
+        grade: grade,
+        feedback: feedback
+      });
 
-    // Save basic student info under students/studentID
-set(ref(db, `students/${studentID}`), {
-  name: studentName,
-  rollNo: studentID,
-  department: department
-});
+      await set(ref(db, `students/${studentID}`), {
+        name: studentName,
+        rollNo: studentID,
+        department: department
+      });
 
+      validEntries++;
+    } catch (error) {
+      console.error(`❌ Failed to save data for ${studentID}`, error);
+    }
+  }
 
-    validEntries++;
-  });
-
-  if (validEntries > 0) {
+  if (validEntries > 0 && lastStudentID) {
     alert(`✅ Saved ${validEntries} student record(s) successfully!`);
-    window.location.href = `student.html?studentID=${studentID}`;
+    window.location.href = "teacher.html"; // Redirect to dashboard, not student.html
   } else {
     alert("⚠️ No valid student entries found.");
   }
@@ -131,8 +136,19 @@ function clearAll() {
   document.querySelectorAll(".student-row input, .student-row textarea").forEach(el => el.value = "");
 }
 
-// Logout function
+// Expose functions to window
+window.saveAllMarks = saveAllMarks;
+window.previewReport = previewReport;
+window.exportExcel = exportExcel;
+window.clearAll = clearAll;
+
+// DOMContentLoaded listener for buttons + subject update
 document.addEventListener("DOMContentLoaded", () => {
+  const saveBtn = document.getElementById("saveBtn");
+  if (saveBtn) {
+    saveBtn.addEventListener("click", saveAllMarks);
+  }
+
   const logoutBtn = document.getElementById("logoutBtn");
   if (logoutBtn) {
     logoutBtn.addEventListener("click", () => {
@@ -147,10 +163,57 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
   }
-});
 
-// Expose functions to window
-window.saveAllMarks = saveAllMarks;
-window.previewReport = previewReport;
-window.exportExcel = exportExcel;
-window.clearAll = clearAll;
+  // ✅ Department-based subject update
+const departmentSubjects = {
+  CSE: [
+    "GE3791 Human Values and Ethics",
+    "GE3751 Principles of Management",
+    "AI3021 IT in Agricultural System",
+    "OHS352 Project Report Writing",
+    "CS3711 Summer Internship"
+  ],
+  ECE: [
+    "Electronics I",
+    "Electronics II",
+    "Signals",
+    "VLSI",
+    "Embedded Systems"
+  ],
+  EEE: [
+    "Circuits",
+    "Power Systems",
+    "Machines",
+    "Control Systems",
+    "Microcontrollers"
+  ],
+  MECH: [
+    "Thermodynamics",
+    "Mechanics",
+    "Manufacturing",
+    "Fluid Dynamics",
+    "Design Engineering"
+  ],
+  IT: [
+    "IT3501 Web Technology",
+    "IT3502 Software Engineering",
+    "IT3503 Data Structures",
+    "IT3504 Database Management Systems",
+    "IT3505 Computer Networks"
+  ]
+};
+  const departmentSelect = document.getElementById("department");
+  const subjectSelect = document.getElementById("subject");
+
+  departmentSelect.addEventListener("change", () => {
+    const selectedDept = departmentSelect.value;
+    const subjects = departmentSubjects[selectedDept] || [];
+
+    subjectSelect.innerHTML = `<option>Choose a subject...</option>`;
+    subjects.forEach(sub => {
+      const option = document.createElement("option");
+      option.textContent = sub;
+      subjectSelect.appendChild(option);
+    });
+  });
+});

@@ -175,3 +175,101 @@ input:focus, select:focus, textarea:focus {
 #dashboard{
   padding-top:35px
 }
+/* ...existing code... */
+
+/* Responsive styles for tablets and below */
+@media (max-width: 900px) {
+  .container {
+    width: 100vw;
+    min-width: 0;
+    padding: 0;
+    justify-content: flex-start;
+    align-items: stretch;
+  }
+  .card {
+    padding: 18px 6px;
+    border-radius: 0;
+    box-shadow: none;
+    width: 100vw;
+    min-width: 0;
+    max-width: 100vw;
+  }
+  .section {
+    padding: 12px 4px;
+    margin-bottom: 14px;
+  }
+  .student-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 10px 2px;
+  }
+  .student-row textarea {
+    height: 56px;
+  }
+  .actions {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  h1, h2 {
+    font-size: 1.3rem;
+  }
+  .subtitle {
+    font-size: 1rem;
+  }
+}
+
+/* Responsive styles for mobile devices */
+@media (max-width: 600px) {
+  .container {
+    padding: 0;
+    min-width: 0;
+    width: 100vw;
+  }
+  .card {
+    padding: 10px 2vw;
+    border-radius: 0;
+    width: 100vw;
+    min-width: 0;
+    max-width: 100vw;
+  }
+  .section {
+    padding: 8px 2px;
+    margin-bottom: 10px;
+  }
+  .student-row {
+    grid-template-columns: 1fr;
+    gap: 6px;
+    padding: 8px 0;
+  }
+  .student-row input,
+  .student-row textarea {
+    font-size: 1rem;
+    padding: 10px 6px;
+  }
+  .actions {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .btn, #addStudent, #logoutBtn {
+    width: 100%;
+    font-size: 1rem;
+    padding: 12px 0;
+    margin-bottom: 8px;
+  }
+  h1, h2 {
+    font-size: 1.1rem;
+  }
+  .subtitle {
+    font-size: 0.95rem;
+  }
+}
+
+/* Extra small devices */
+@media (max-width: 400px) {
+  .card {
+    padding: 4px 1vw;
+  }
+  h1, h2 {
+    font-size: 1rem;
+  }
+}
